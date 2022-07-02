@@ -15,6 +15,9 @@ class attackMove:
 		elif moveAction == 'drain':
 			self.damage = param1
 			self.accuracy = param2
+		elif moveAction == 'superdrain':
+			self.damage = param1
+			self.accuracy = param2
 
 hydro_pump = attackMove('Hydro Pump', poketypes.waterType, 'damage', 110, 80)
 giga_drain = attackMove('Giga Drain', poketypes.grassType, 'drain', 75, 100)
@@ -75,7 +78,9 @@ ice3 = attackMove('Ice3', poketypes.fightingType, 'damage', 400, 70)
 fire = attackMove('Fire', poketypes.psychicType, 'damage', 400, 70)
 fire2 = attackMove('Fire2', poketypes.fightingType, 'damage', 400, 70)
 fire3 = attackMove('Fire3', poketypes.bugType, 'damage', 400, 70)
-
+revive = attackMove('Revive', poketypes.loveType, 'superdrain', 1, 100)
+love = attackMove('Love', poketypes.loveType, 'damage', 9999999, 10)
+kill = attackMove('Kill', poketypes.loveType, 'damage', 9999999, 50)
 
 
 

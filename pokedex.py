@@ -48,7 +48,7 @@ pokemon_list = [
 
 	pokemon("Moltres", poketypes.fireType, poketypes.flyingType, 500, move.overheat, move.fire, move.fire2),
 	pokemon("G. Moltres", poketypes.darkType, poketypes.flyingType, 500, move.fire, move.fire2, move.fire3),
-
+	pokemon("Arceus", poketypes.loveType, None, 9999999, move.love, move.kill, move.revive)
 
 
 

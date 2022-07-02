@@ -231,7 +231,7 @@ def attackButton(card, move, defending_pokemon, defPokeCardFrame, active_pokemon
 # Attack the pokemon by reducing the hp, clearing the cards, and then making them again
 def moveAttack(active_pokemon, defending_pokemon, cardFrame, move):
 	# Check if Benched
-	if (defending_pokemon == None) or (active_pokemon.hp==0):
+	if (defending_pokemon == None) or (active_pokemon.hp==0) or (defending_pokemon.hp == 0):
 		return
 	moveChance = randint(0, 99)
 	damageHit = move.damage
@@ -275,6 +275,9 @@ def moveAttack(active_pokemon, defending_pokemon, cardFrame, move):
 
 	if move.moveAction == 'drain':
 		active_pokemon.hp = active_pokemon.hp + (damageHit/2)
+
+	if move.moveAction == 'superdrain':
+		active_pokemon.hp = active_pokemon.hp + (damageHit*9999999)
 
 
 	minusCard(cardFrameL)
