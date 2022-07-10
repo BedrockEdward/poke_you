@@ -2,7 +2,7 @@ import movelist as move
 import poketypes
 
 class pokemon:
-	def __init__(self, name, type_, type2_, hp=0, move1=None, move2=None, move3=None, bench=False, benchPlace=0):
+	def __init__(self, name, type_, type2_, hp=0, move1=None, move2=None, move3=None):
 		self.name = name
 		self.type = type_
 		self.type2 = type2_
@@ -10,9 +10,6 @@ class pokemon:
 		self.move1 = move1
 		self.move2 = move2
 		self.move3 = move3
-		
-		self.bench = bench
-		self.benchPlace = benchPlace
 
 pokemon_list = [
 	pokemon("Blastoise", poketypes.waterType, None, 186, move.hydro_pump, move.mega_kick, move.scald),

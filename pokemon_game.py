@@ -42,196 +42,97 @@ buttonFrameR = tk.Frame(buttonFrame, width=100)
 cardFrameL.pack_propagate(0)
 cardFrameR.pack_propagate(0)
 
-# Make a dummy pokemon just to fill the space
-newPokemon = pokemon(pokemon_list[0].name,
-	pokemon_list[0].type,
-	pokemon_list[0].type2,
-	pokemon_list[0].hp,
-	pokemon_list[0].move1,
-	pokemon_list[0].move2,
-	pokemon_list[0].move3
-)
-active_pokemonR = newPokemon
-active_pokemonL = newPokemon
+# Player and his pokemon
+class PlayerSide:
+	def __init__(self, side, cardFrame, benchFrame):
+		self.side = side
+		self.bench = []
+		self.activePokemon = self.makePokemon()
+		self.buildBench(6)
+		self.cardFrame = cardFrame
+		self.benchFrame = benchFrame
 
-bench_pokemonR = [newPokemon, newPokemon, newPokemon, newPokemon, newPokemon]
-bench_pokemonL = [newPokemon, newPokemon, newPokemon, newPokemon, newPokemon]
-
-startL = True
-startR = True
-
-
-# Choose a random pokemon and make the card
-def newPoke(cardFrame):
-	global startL
-	global startR
-	global active_pokemonL
-	global active_pokemonR
-	global bench_pokemonL
-	global bench_pokemonR
-
-	# Choose a random pokemon
-	pokemon_num = randint(0, len(pokemon_list)-1)
-	newActivePokemon = pokemon(pokemon_list[pokemon_num].name,
-						pokemon_list[pokemon_num].type,
-						pokemon_list[pokemon_num].type2,
-						pokemon_list[pokemon_num].hp * hpMultiplier,
-						pokemon_list[pokemon_num].move1,
-						pokemon_list[pokemon_num].move2,
-						pokemon_list[pokemon_num].move3
-					)
-
-
-
-	# Make the card
-	if cardFrame == cardFrameL:
-		active_pokemonL = newActivePokemon
-		active_pokemon = active_pokemonL
-		bench_pokemon = bench_pokemonL
-		benchFrame = benchFrameL
-		start = startL
-	else:
-		active_pokemonR = newActivePokemon
-		active_pokemon = active_pokemonR
-		bench_pokemon = bench_pokemonR
-		benchFrame = benchFrameR
-		start = startR
-	makeCard(active_pokemon, cardFrame)
-
-	minusCard(benchFrame)
-
-
-	# Make Bench
-	if start:
-		bench_pokemon[0] = makeBenchPokemon()
-		bench_pokemon[0].benchPlace = 1
-		bench_pokemon[1] = makeBenchPokemon()
-		bench_pokemon[1].benchPlace = 2
-		bench_pokemon[2] = makeBenchPokemon()
-		bench_pokemon[2].benchPlace = 3
-		bench_pokemon[3] = makeBenchPokemon()
-		bench_pokemon[3].benchPlace = 4
-		bench_pokemon[4] = makeBenchPokemon()
-		bench_pokemon[4].benchPlace = 5
-		if cardFrame == cardFrameL:
-			startL = False
-		else:
-			startR = False
-
-	makeCard(bench_pokemon[0], benchFrame)
-	makeCard(bench_pokemon[1], benchFrame)
-	makeCard(bench_pokemon[2], benchFrame)
-	makeCard(bench_pokemon[3], benchFrame)
-	makeCard(bench_pokemon[4], benchFrame)
-
-	newPokeText = 'Go ' + active_pokemon.name + '.'
-
-	minusCard(headerFrame)
-	title = tk.Label(headerFrame, text=newPokeText, font='Helvetica 14 bold')
-	title.pack(side="top")
+	# Create a bench with 5 random pokemon
+	def buildBench(self, numPokemon):
+		for p in range(0,numPokemon-1):
+			newPokemon = self.makePokemon()
+			self.bench.append(newPokemon)
 	
-
-def makeBenchPokemon():
-	pokemon_num = randint(0, len(pokemon_list)-1)
-	newBenchPokemon = pokemon(pokemon_list[pokemon_num].name,
-						pokemon_list[pokemon_num].type,
-						pokemon_list[pokemon_num].type2,
-						pokemon_list[pokemon_num].hp * hpMultiplier,
-						pokemon_list[pokemon_num].move1,
-						pokemon_list[pokemon_num].move2,
-						pokemon_list[pokemon_num].move3,
-						True
-					)
-	return newBenchPokemon
+	# Choose a random pokemon
+	def makePokemon(self):
+		pokemon_num = randint(0, len(pokemon_list)-1)
+		newPokemon = pokemon(pokemon_list[pokemon_num].name,
+							pokemon_list[pokemon_num].type,
+							pokemon_list[pokemon_num].type2,
+							pokemon_list[pokemon_num].hp * hpMultiplier,
+							pokemon_list[pokemon_num].move1,
+							pokemon_list[pokemon_num].move2,
+							pokemon_list[pokemon_num].move3)
+		return newPokemon
 
 
-# Make a card and give it a name, hp, and attacks
-def makeCard(active_pokemon, cardFrame):
-	card = tk.Frame(cardFrame, width=100, height=200, highlightbackground="#ffafff", highlightthickness=1, bg=active_pokemon.type.color)
-	card.pack_propagate(0)
+# Game structure
+class GameInstance:
+	# Initialize players and draw their cards
+	def __init__(self):
+		self.left = PlayerSide('left', cardFrameL, benchFrameL)
+		self.right = PlayerSide('right', cardFrameR, benchFrameR)
+		minusCard(buttonFrame)
+		self.makeCards(self.left, self.right)
+		self.makeCards(self.right, self.left)
 
-	# Set parameters depending on the side
-	if cardFrame == cardFrameL:
-		side_ = 'right'
-		defending_pokemon = active_pokemonR
-		defPokeCardFrame = cardFrameR
-		switch_active = active_pokemonL
-	elif cardFrame == cardFrameR:
-		side_ = 'left'
-		defending_pokemon = active_pokemonL
-		defPokeCardFrame = cardFrameL
-		switch_active = active_pokemonR
-	elif cardFrame == benchFrameR:
-		side_ = 'left'
-		defending_pokemon = None
-		defPokeCardFrame = cardFrameR
-		switch_active = active_pokemonR
-		benchFrame = benchFrameR
-	else:
-		side_ = 'left'
-		defending_pokemon = None
-		defPokeCardFrame = cardFrameL
-		switch_active = active_pokemonL
-		benchFrame = benchFrameL
+	# Draw or redraw all of a player's cards
+	def makeCards(self, player, opponent):
+		self.makeCard(player.activePokemon, player, opponent)
+		for bp in range(len(player.bench)):
+			self.makeCard(player.bench[bp], player, opponent, bp)
 
 
-	# Build the card
-	card.pack(side=side_, padx=3)
-	hp = tk.Label(card, text=active_pokemon.hp, width=100, font='Helvetica 20 bold', bg="#ff0fff")
-	hp.pack()
-	pokeName = tk.Label(card, text=active_pokemon.name, font='Helvetica 10 bold', bg="#ffafff")
-	pokeName.pack()
-	attackButton(card, active_pokemon.move1, defending_pokemon, defPokeCardFrame, active_pokemon)
-	attackButton(card, active_pokemon.move2, defending_pokemon, defPokeCardFrame, active_pokemon)
-	attackButton(card, active_pokemon.move3, defending_pokemon, defPokeCardFrame, active_pokemon)
+	# Make a card and give it a name, hp, and attacks
+	def makeCard(self, pokemonEntity, player, opponent, benchSpot=6):
+		cardFrame = player.cardFrame
+		if benchSpot < 6:
+			cardFrame = player.benchFrame
+		card = tk.Frame(cardFrame, width=100, height=200, highlightbackground="#ffafff", highlightthickness=1, bg=pokemonEntity.type.color)
+		card.pack_propagate(0)
 
-	if (active_pokemon.bench and (active_pokemon.hp > 0)):
-		switchButton = tk.Button(card, width=20, text='Switch', font='Helvetica 10 bold',
-			command=lambda:switchPokemon(switch_active, active_pokemon, defPokeCardFrame, benchFrame))
-		switchButton.pack(side='bottom')
+		# Build the card with attacks
+		card.pack(side=player.side, padx=3)
+		hp = tk.Label(card, text=pokemonEntity.hp, width=100, font='Helvetica 20 bold', bg="#ff0fff")
+		hp.pack()
+		pokeName = tk.Label(card, text=pokemonEntity.name, font='Helvetica 10 bold', bg="#ffafff")
+		pokeName.pack()
+		attackButton(card, player, pokemonEntity.move1, opponent, benchSpot)
+		attackButton(card, player, pokemonEntity.move2, opponent, benchSpot)
+		attackButton(card, player, pokemonEntity.move3, opponent, benchSpot)
 
-def switchPokemon(active_pokemon, switch_pokemon, cardFrame, benchFrame):
-	global active_pokemonL
-	global active_pokemonR
-	global bench_pokemonL
-	global bench_pokemonR
+		# Add a Switch button if the pokemon is on the bench
+		if ((benchSpot < 6) and (pokemonEntity.hp > 0)):
+			switchButton = tk.Button(card, width=20, text='Switch', font='Helvetica 10 bold',
+				command=lambda:self.switchPokemon(pokemonEntity, player, benchSpot, opponent))
+			switchButton.pack(side='bottom')
 
-	active_pokemon.bench = True
-	switch_pokemon.bench = False
-	if cardFrame == cardFrameL:
-		bench_pokemonL[switch_pokemon.benchPlace-1] = active_pokemon
-		active_pokemonL = switch_pokemon
-		active_pokemonL.benchPlace = 0
-		bench_pokemon = bench_pokemonL
-		active_pokemon = active_pokemonL
+	# Switch a benched pokemon with the active pokemon
+	def switchPokemon(self, pokemonEntity, player, benchSpot, opponent):
+		player.bench.append(player.activePokemon)
+		player.activePokemon = pokemonEntity
+		player.bench.pop(benchSpot)
+		minusCard(player.cardFrame)
+		minusCard(player.benchFrame)
+		game.makeCards(player, opponent)
 
-	else:
-		bench_pokemonR[switch_pokemon.benchPlace-1] = active_pokemon
-		active_pokemonR = switch_pokemon
-		active_pokemonR.benchPlace = 0
-		bench_pokemon = bench_pokemonR
-		active_pokemon = active_pokemonR
-	minusCard(cardFrame)
-	minusCard(benchFrame)
-
-	makeCard(active_pokemon, cardFrame)
-	makeCard(bench_pokemon[0], benchFrame)
-	makeCard(bench_pokemon[1], benchFrame)
-	makeCard(bench_pokemon[2], benchFrame)
-	makeCard(bench_pokemon[3], benchFrame)
-	makeCard(bench_pokemon[4], benchFrame)
 
 # Create an attack button
-def attackButton(card, move, defending_pokemon, defPokeCardFrame, active_pokemon):
+def attackButton(card, player, move, opponent, benchSpot):
 	moveButton = tk.Button(card, width=20, fg=move.type.color, text=move.name, font='Helvetica 10 bold',
-		command=lambda:moveAttack(active_pokemon, defending_pokemon, defPokeCardFrame, move))
+		command=lambda:moveAttack(player, move, opponent, benchSpot))
 	moveButton.pack()
 
 
 # Attack the pokemon by reducing the hp, clearing the cards, and then making them again
-def moveAttack(active_pokemon, defending_pokemon, cardFrame, move):
+def moveAttack(player, move, opponent, benchSpot):
 	# Check if Benched
-	if (defending_pokemon == None) or (active_pokemon.hp==0) or (defending_pokemon.hp == 0):
+	if (opponent.activePokemon == None) or (player.activePokemon.hp==0) or (opponent.activePokemon.hp == 0) or (benchSpot < 6):
 		return
 	moveChance = randint(0, 99)
 	damageHit = move.damage
@@ -241,24 +142,24 @@ def moveAttack(active_pokemon, defending_pokemon, cardFrame, move):
 		effectiveText = 'It missed.'
 
 	if damageHit > 0:
-		for weakness in defending_pokemon.type.weakness:
+		for weakness in opponent.activePokemon.type.weakness:
 			if weakness == move.type.name:
 				damageHit=damageHit*2
-		for resistance in defending_pokemon.type.resistance:		
+		for resistance in opponent.activePokemon.type.resistance:		
 			if resistance == move.type.name:
 				damageHit=damageHit/2
-		for no_effect in defending_pokemon.type.no_effect:		
+		for no_effect in opponent.activePokemon.type.no_effect:		
 			if no_effect == move.type.name:
 				damageHit=0
 
-		if (damageHit > 0) and (defending_pokemon.type2 != None):
-			for weakness in defending_pokemon.type2.weakness:
+		if (damageHit > 0) and (opponent.activePokemon.type2 != None):
+			for weakness in opponent.activePokemon.type2.weakness:
 				if weakness == move.type.name:
 					damageHit=damageHit*2
-			for resistance in defending_pokemon.type2.resistance:		
+			for resistance in opponent.activePokemon.type2.resistance:		
 				if resistance == move.type.name:
 					damageHit=damageHit/2
-			for no_effect in defending_pokemon.type2.no_effect:		
+			for no_effect in opponent.activePokemon.type2.no_effect:		
 				if no_effect == move.type.name:
 					damageHit=0
 				
@@ -268,32 +169,29 @@ def moveAttack(active_pokemon, defending_pokemon, cardFrame, move):
 			effectiveText = 'It was not very effective.'
 		if damageHit == 0:
 			effectiveText = 'It did no damage.'
+		opponent.activePokemon.hp = opponent.activePokemon.hp - damageHit
 
-		defending_pokemon.hp = defending_pokemon.hp - damageHit
-
-	moveText = active_pokemon.name + ' used ' + move.name + '. ' + effectiveText
-
+	moveText = player.activePokemon.name + ' used ' + move.name + '. ' + effectiveText
 	if move.moveAction == 'drain':
-		active_pokemon.hp = active_pokemon.hp + (damageHit/2)
-
+		player.activePokemon.hp = player.activePokemon.hp + (damageHit/2)
 	if move.moveAction == 'superdrain':
-		active_pokemon.hp = active_pokemon.hp + (damageHit*9999999)
+		player.activePokemon.hp = player.activePokemon.hp + (damageHit*9999999)
 
+	# Redraw cards after performing the attack
+	minusCard(player.cardFrame)
+	minusCard(opponent.cardFrame)
+	if player.activePokemon.hp < 0:
+		player.activePokemon.hp = 0
+	game.makeCard(player.activePokemon, player, opponent)
+	if opponent.activePokemon.hp < 0:	
+		opponent.activePokemon.hp = 0
+	game.makeCard(opponent.activePokemon, opponent, player)
 
-	minusCard(cardFrameL)
-	minusCard(cardFrameR)
-	if active_pokemonL.hp < 0:
-		active_pokemonL.hp = 0	
-	makeCard(active_pokemonL, cardFrameL)
-	if active_pokemonR.hp < 0:	
-		active_pokemonR.hp = 0	
-	makeCard(active_pokemonR, cardFrameR)
+	if opponent.activePokemon.hp == 0:
+		effectiveText = effectiveText + ' ' + opponent.activePokemon.name + ' fainted.'
+	moveText = player.activePokemon.name+ ' used ' + move.name + '. ' + effectiveText
 
-	if defending_pokemon.hp == 0:
-		effectiveText = effectiveText + ' ' + defending_pokemon.name + ' fainted.'
-
-	moveText = active_pokemon.name+ ' used ' + move.name + '. ' + effectiveText
-
+	# Draw the battle text at the top of the screen
 	minusCard(headerFrame)
 	title = tk.Label(headerFrame, text=moveText, font='Helvetica 14 bold', fg=move.type.color)
 	title.pack(side="top")
@@ -304,11 +202,10 @@ def minusCard(cardFrame):
 	for thing in cardFrame.winfo_children():
 		thing.destroy()
 
+# Create the game instance so we can call it later
 def startGame():
-	newPoke(cardFrameL)
-	newPoke(cardFrameR)
-	minusCard(buttonFrame)
-
+	global game
+	game = GameInstance()
 
 # Add and remove buttons
 headerFrame.config(bg="#ffafff")
@@ -326,6 +223,7 @@ benchFrameL.pack(side="left", pady=50)
 benchFrameR.pack(side="right", pady=50)
 buttonFrame.pack(side="bottom")
 
-
 # Run the program!
 root.mainloop()
+
+
