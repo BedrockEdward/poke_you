@@ -26,4 +26,4 @@ bugType = pokeType('Bug', {'Flying', 'Rock', 'Fire', 'Love'}, {'Fighting', 'Grou
 ghostType = pokeType('Ghost', {'Ghost', 'Dark', 'Love'}, {'Poison', 'Bug'}, {'Normal', 'Fighting'}, '#310956')
 steelType = pokeType('Steel', {'Fighting', 'Ground', 'Fire', 'Love'}, {'Normal', 'Flying', 'Rock', 'Bug', 'Steel', 'Grass', 'Psychic', 'Ice', 'Dragon', 'Fairy'}, {'Poison'}, '#999999')
 loveType = pokeType('Love', {'Normal'},{'Normal'},{'Water', 'Grass', 'Fire', 'Electric', 'Psychic', 'Ice', 'Dragon', 'Dark', 'Fairy', 'Fighting', 'Flying', 'Poison', 'Ground', 'Rock', 'Bug', 'Ghost', 'Steel'}, '#ffa3e9')
-
+hateType = pokeType('Hate', {'Water', 'Grass', 'Fire', 'Electric', 'Psychic', 'Ice', 'Dragon', 'Dark', 'Fairy', 'Fighting', 'Flying', 'Poison', 'Ground', 'Rock', 'Bug', 'Ghost', 'Steel'},{'Water', 'Grass', 'Fire', 'Electric', 'Psychic', 'Ice', 'Dragon', 'Dark', 'Fairy', 'Fighting', 'Flying', 'Poison', 'Ground', 'Rock', 'Bug', 'Ghost', 'Steel'},{'Normal'}, '#ffa3e9')

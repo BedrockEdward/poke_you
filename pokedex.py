@@ -34,7 +34,6 @@ pokemon_list = [
 	pokemon("Gengar", poketypes.ghostType,  poketypes.poisonType, 200, [move.shadow_ball, move.mega_kick, move.dark_pulse]),
 	pokemon("Lunala", poketypes.psychicType,  poketypes.ghostType, 244, [move.z_move, move.moongeist_beam, move.sunsteal_strike]),
 	pokemon("Solgaleo", poketypes.steelType, poketypes.psychicType, 244, [move.z_move, move.sunsteal_strike, move.moongeist_beam]),
-
 	pokemon("Mew", poketypes.psychicType, None, 500, [move.psychic, move.behemoth_blade, move.mew_move]),
 	pokemon("Mewtwo", poketypes.psychicType, None, 500, [move.foul_play, move.psychic, move.mewtwo_move]),
 	pokemon("Zarude", poketypes.darkType, poketypes.grassType, 212, [move.jungle_healing, move.throat_chop, move.close_combat]),
@@ -44,7 +43,7 @@ pokemon_list = [
 	pokemon("G. Articuno", poketypes.psychicType, poketypes.flyingType, 500, [move.ice, move.ice2, move.ice3]),
 	pokemon("Moltres", poketypes.fireType, poketypes.flyingType, 500, [move.overheat, move.fire, move.fire2]),
 	pokemon("G. Moltres", poketypes.darkType, poketypes.flyingType, 500, [move.fire, move.fire2, move.fire3]),
-	pokemon("Arceus", poketypes.loveType, None, 9999999, [move.love, move.kill, move.revive])
+	pokemon("Arceus", poketypes.loveType, None, 9999999, [move.love, move.kill, move.revive, move.wtf])
 
 
 
