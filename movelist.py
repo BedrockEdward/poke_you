@@ -82,6 +82,6 @@ revive = attackMove('Revive', poketypes.loveType, 'superdrain', 1, 100)
 love = attackMove('Love', poketypes.loveType, 'damage', 9999999, 10)
 kill = attackMove('Kill', poketypes.loveType, 'damage', 9999999, 50)
 wtf = attackMove('Wtf', poketypes.hateType, 'damage', 9999999,100)
-
+hidden_power =attackMove('Hidden Power', poketypes.hiddenType, 'damage', 100, 100)
 
 

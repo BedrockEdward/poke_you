@@ -43,8 +43,8 @@ pokemon_list = [
 	pokemon("G. Articuno", poketypes.psychicType, poketypes.flyingType, 500, [move.ice, move.ice2, move.ice3]),
 	pokemon("Moltres", poketypes.fireType, poketypes.flyingType, 500, [move.overheat, move.fire, move.fire2]),
 	pokemon("G. Moltres", poketypes.darkType, poketypes.flyingType, 500, [move.fire, move.fire2, move.fire3]),
-	pokemon("Arceus", poketypes.loveType, None, 9999999, [move.love, move.kill, move.revive, move.wtf])
-
+	pokemon("Arceus", poketypes.loveType, None, 9999999, [move.love, move.kill, move.revive, move.wtf]),
+	pokemon("Unown", poketypes.hiddenType, None, 9999999, [move.hidden_power])
 
 
 
